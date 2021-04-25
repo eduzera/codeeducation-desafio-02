@@ -1,0 +1,43 @@
+version: '3'
+
+services:
+  db:
+    image: mysql:5.7
+    command: --innodb-use-native-aio=0
+    container_name: db
+    restart: always
+    tty: true
+    volumes: 
+      - ./mysql:/var/lib/mysql
+    environment: 
+      - MYSQL_DATABASE=nodedb
+      - MYSQL_ROOT_PASSWORD=root
+    networks: 
+      - desafio02_net
+  app:
+    build: 
+      context: ./node
+      dockerfile: Dockerfile.prod
+    container_name: app
+    entrypoint: dockerize -wait tcp://db:3306 -timeout 20s
+    command: ["node", "index.js"]
+    networks:
+      - desafio02_net
+    tty: true
+    depends_on: 
+      - db
+  nginx:
+    build: 
+      context: ./nginx
+      dockerfile: Dockerfile.prod
+    container_name: nginx
+    ports: 
+      - 8080:80
+    networks:
+     - desafio02_net
+    depends_on: 
+      - app
+
+networks:
+  desafio02_net:
+    driver: bridge
