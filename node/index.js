@@ -16,7 +16,7 @@ connection.query(sql)
 app.get('/', (req,res) => {
     const sqlSelect = `SELECT * FROM people`
     
-    var content = '<h1>Full Cycle</h1>';
+    var content = '<h1>Full Cycle Rocks!</h1>';
 
     connection.query("SELECT * FROM people", function (err, result, fields) {
         if (err) throw err;
