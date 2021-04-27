@@ -8,6 +8,7 @@ services:
     restart: always
     tty: true
     volumes: 
+      - ./db_scripts:/docker-entrypoint-initdb.d
       - ./mysql:/var/lib/mysql
     environment: 
       - MYSQL_DATABASE=nodedb
@@ -19,7 +20,7 @@ services:
       context: ./node
       dockerfile: Dockerfile.prod
     container_name: app
-    entrypoint: dockerize -wait tcp://db:3306 -timeout 20s
+    entrypoint: dockerize -wait tcp://db:3306 -timeout 60s
     command: ["node", "index.js"]
     networks:
       - desafio02_net
